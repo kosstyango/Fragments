@@ -2,27 +2,26 @@ package com.example.fragment5
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
+import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
 import com.example.fragment5.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val dataModel: DataModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        binding.btnFragment2.setOnClickListener {//создаём слушатель кнопки
-            //Toast.makeText(this, "Кнопка нажата", Toast.LENGTH_LONG).show() //показываем, что кнопка нажата
-            supportFragmentManager //запускаем Фрагмент2 на Активити
-                .beginTransaction()
-                .replace(R.id.place_holder, BlankFragment2.newInstance())
-                .commit()
-        }
-
-        supportFragmentManager //запускаем Фрагмент1 на Активити
+        openFrag(BlankFragment1.newInstance(), R.id.place_holder1)
+        openFrag(BlankFragment2.newInstance(), R.id.place_holder2)
+        dataModel.message2Activity.observe(this, {
+            binding.textView.text = it })
+    }
+    private fun openFrag(f: Fragment, idHolder: Int){
+        supportFragmentManager //запускаем Фрагмент на Активити в Place_Holder
             .beginTransaction()
-            .replace(R.id.place_holder, BlankFragment.newInstance())
+            .replace(idHolder, f)
             .commit()
     }
 }
